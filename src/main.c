@@ -3,12 +3,12 @@
 int main(int argc, char** argv)
 {
     char* fileName;
-    int symbolIdx;
-    char* symStrTable;
+    //int symbolIdx;
+    //char* symStrTable;
     t_elf_map* elfMap;
     t_mapped_section* symTab;
     t_mapped_section* strTab;
-    ElfN_Sym* symbols;
+    //ElfN_Sym* symbols;
 
     if (argc < 2)
         fileName = "a.out";
@@ -32,8 +32,8 @@ int main(int argc, char** argv)
         printf("No symbol names\n");
         return 1;
     }
-    symStrTable = (char*)strTab->data;
-    symbols = (ElfN_Sym*)symTab->data;
+    //symStrTable = (char*)strTab->data;
+    //symbols = (ElfN_Sym*)symTab->data;
    
     unmapFile(elfMap);
     return 0;

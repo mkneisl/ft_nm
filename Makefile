@@ -6,11 +6,11 @@ DIR_GUARD=@mkdir -p $(@D)
 LIBFT=./libft/libft.a
 FILE_NAMES = 	main \
 				fileIo \
-				elfMap 
+				elfMap \
+				symbols
 
 OBJ_FILES = $(addprefix $(BIN)/, $(addsuffix .o , $(FILE_NAMES)))
-CFLAGS=-std=c11
-#-Werror -Wall -Wextra
+CFLAGS=-Werror -Wall -Wextra -std=c11
 
 all: $(NAME)
 
