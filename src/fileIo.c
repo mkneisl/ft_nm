@@ -1,4 +1,5 @@
 #include "fileIo.h"
+#include <stdio.h>
 
 int openFile(const char* path, size_t* fileSize)
 {
@@ -46,6 +47,7 @@ t_file_range* mapFileRangeToMemory(int fd, size_t offset, size_t size)
         return NULL;
     }
     mappedRange->rangeSize = size;
+    mappedRange->offset = offset;
     return mappedRange;
 }
 

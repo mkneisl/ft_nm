@@ -4,10 +4,13 @@ BIN = bin
 DIR_GUARD=@mkdir -p $(@D)
 
 LIBFT=./libft/libft.a
-FILE_NAMES = main
+FILE_NAMES = 	main \
+				fileIo \
+				elfMap 
 
 OBJ_FILES = $(addprefix $(BIN)/, $(addsuffix .o , $(FILE_NAMES)))
-CFLAGS=-Werror -Wall -Wextra
+CFLAGS=-std=c11
+#-Werror -Wall -Wextra
 
 all: $(NAME)
 
@@ -19,7 +22,7 @@ $(NAME): $(LIBFT) $(OBJ_FILES)
 	gcc $(OBJ_FILES) $(CFLAGS) $(LIBFT) -Iinclude  -o $(NAME)
 
 $(LIBFT):
-	make -C ./libft/ all
+	make -C ./libft/ bonus
 
 clean:
 	rm -rf $(BIN)
