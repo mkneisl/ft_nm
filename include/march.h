@@ -7,7 +7,9 @@ typedef struct{
 }ElfN_Ehdr;
 
 typedef unsigned char* ElfN_Shdr;
-typedef unsigned char* ElfN_Sym;
+typedef struct{ 
+    uint32_t      st_name;
+}ElfN_Sym;
 
 #define MARCH_CALL(arch, function, ...) \
     ((arch == ELFCLASS32) ? function##32(__VA_ARGS__) : function##64(__VA_ARGS__))

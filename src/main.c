@@ -3,12 +3,8 @@
 int main(int argc, char** argv)
 {
     char* fileName;
-    //int symbolIdx;
-    //char* symStrTable;
     t_elf_map* elfMap;
-    t_mapped_section* symTab;
-    t_mapped_section* strTab;
-    //ElfN_Sym* symbols;
+    t_symbol_data* symData;
 
     if (argc < 2)
         fileName = "a.out";
@@ -20,21 +16,14 @@ int main(int argc, char** argv)
         printf("Cant map file\n");
         return 1;
     }
-    symTab = MARCH_CALL(elfMap->arch, getSection, elfMap, ".symtab");
-    if (!symTab)
+    symData = MARCH_CALL(elfMap->arch, loadSymbols, elfMap);
+    if (!symData)
     {
         printf("No symbols\n");
         return 1;
     }
-    strTab = MARCH_CALL(elfMap->arch, getSection, elfMap, ".strtab");
-    if (!strTab)
-    {
-        printf("No symbol names\n");
-        return 1;
-    }
-    //symStrTable = (char*)strTab->data;
-    //symbols = (ElfN_Sym*)symTab->data;
-   
+    for (size_t i = 0; i < symData->symbolCount; i++)
+        printf("->%s\n", getSymbolName(symData, symData->symbols[i]));
     unmapFile(elfMap);
     return 0;
 }

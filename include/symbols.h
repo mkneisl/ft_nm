@@ -6,12 +6,13 @@ typedef struct s_symbol_data
 {
     t_elf_map* elfMap;
     ElfN_Sym** symbols;
+    size_t symbolCount;
     char* nameTable;
 }t_symbol_data;
 
-int loadSymbols32(t_elf_map* elfMap, int sorting);
-int loadSymbols64(t_elf_map* elfMap, int sorting);
+t_symbol_data* loadSymbols32(t_elf_map* elfMap);
+t_symbol_data* loadSymbols64(t_elf_map* elfMap);
 
-int getSymbolType64(ElfN_Sym* symbol);
-int getSymbolType32(ElfN_Sym* symbol);
+char* getSymbolName(t_symbol_data* symData, ElfN_Sym* symbol);
+
 #endif
