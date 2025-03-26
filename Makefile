@@ -7,7 +7,9 @@ LIBFT=./libft/libft.a
 FILE_NAMES = 	main \
 				fileIo \
 				elfMap \
-				symbols
+				symbols \
+				args \
+				print 
 
 OBJ_FILES = $(addprefix $(BIN)/, $(addsuffix .o , $(FILE_NAMES)))
 CFLAGS=-Werror -Wall -Wextra -std=c11

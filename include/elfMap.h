@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "fileIo.h"
-#include "../libft/include/libft.h"
+#include "print.h"
+#include "libft.h"
 #include "march.h"
 
 #define PAGE_4KB 0x1000

@@ -12,10 +12,12 @@ t_elf_map*          mapFile(const char* path)
     elfMap->fd = openFile(path, &elfMap->fileSize);
     if (elfMap->fd < 0)
     {
+        printNoSuchFile(path);
         free(elfMap);
         return NULL;
     }
-    if (mapHeader(elfMap) < 0 
+    if (elfMap->fileSize < 20 
+        || mapHeader(elfMap) < 0 
         || MARCH_CALL(elfMap->arch, verifyHeader, elfMap) < 0
         || MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap) < 0)
     {
