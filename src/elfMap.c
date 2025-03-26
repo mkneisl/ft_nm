@@ -1,5 +1,4 @@
 #include "elfMap.h"
-#include <stdio.h>
 #include <string.h>
 
 t_elf_map*          mapFile(const char* path)
@@ -40,14 +39,14 @@ int mapHeader(t_elf_map* elfMap)
     elfMap->elfHeader = (ElfN_Ehdr*)elfMap->fileHdrRange->rangeStart;
     if (ft_memcmp(elfMap->elfHeader->e_ident, ELFMAG, SELFMAG))
     {
-        printf("wrong class\n");
+        ft_printf("wrong class\n");
         return -1;
     }
     elfMap->arch = elfMap->elfHeader->e_ident[EI_CLASS];
     if (elfMap->arch != ELFCLASS32
         && elfMap->arch != ELFCLASS64)
     {
-        printf("wrong class\n");
+        ft_printf("wrong class\n");
         return -1;
     }
     return 0;
@@ -61,14 +60,14 @@ int verifyHeader##arch(t_elf_map* elfMap) \
     elfHdr = (Elf##arch##_Ehdr*)elfMap->fileHdrRange->rangeStart;\
     if (elfHdr->e_ident[EI_VERSION] != EV_CURRENT)\
     {\
-        printf("e1\n");\
+        ft_printf("e1\n");\
         return -1;\
     }\
     if (elfHdr->e_type != ET_EXEC \
         && elfHdr->e_type != ET_DYN\
         && elfHdr->e_type != ET_REL)\
         {\
-            printf("e2\n");\
+            ft_printf("e2\n");\
             return -1;\
         }\
     if (elfHdr->e_ehsize != sizeof(Elf##arch##_Ehdr)\
@@ -76,7 +75,7 @@ int verifyHeader##arch(t_elf_map* elfMap) \
         || elfHdr->e_shoff + elfHdr->e_shentsize * elfHdr->e_shnum > elfMap->fileSize\
         || elfHdr->e_shstrndx >= elfHdr->e_shnum)\
         {\
-            printf("e3\n");\
+            ft_printf("e3\n");\
             return -1;\
         }\
     return 0;\

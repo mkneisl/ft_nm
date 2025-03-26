@@ -9,17 +9,17 @@ int openFile(const char* path, size_t* fileSize)
     fd = open(path, O_RDONLY);
     if (fd < 0)
     {
-        printf("open failed! (%i)\n", errno);
+        ft_printf("open failed! (%i)\n", errno);
         return -1;
     }
     if (fstat(fd, &fileStats) < 0)
     {
-        printf("fstat failed! (%i)\n", errno);
+        ft_printf("fstat failed! (%i)\n", errno);
         return -1;
     }
     if (!S_ISREG(fileStats.st_mode) || fileStats.st_size < 50)
     {
-        printf("invalid file provided\n");
+        ft_printf("invalid file provided\n");
         return -1;
     }
     *fileSize = fileStats.st_size;

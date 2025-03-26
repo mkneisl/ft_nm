@@ -13,13 +13,13 @@ int main(int argc, char** argv)
     elfMap = mapFile(fileName);
     if (!elfMap)
     {
-        printf("Cant map file\n");
+        ft_printf("Cant map file\n");
         return 1;
     }
     symData = MARCH_CALL(elfMap->arch, loadSymbols, elfMap);
     if (!symData)
     {
-        printf("No symbols\n");
+        ft_printf("No symbols\n");
         return 1;
     }
     sortSymbols(symData, 1);
@@ -33,9 +33,9 @@ int main(int argc, char** argv)
         //     continue;
         if (ft_toupper(symChar) != 'U'
             && ft_toupper(symChar) != 'W') 
-            printf("%016lx %c %s\n", symVal, symChar, symName);
+            ft_printf("%c %s\n", symChar, symName);
         else
-            printf("%16s %c %s\n", "", symChar, symName);
+            ft_printf("%c %s\n",  symChar, symName);
     }
     unmapFile(elfMap);
     return 0;

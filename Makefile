@@ -16,13 +16,13 @@ all: $(NAME)
 
 $(BIN)/%.o: ./src/%.c
 	$(DIR_GUARD)
-	gcc -c $< $(CFLAGS) -Iinclude -o $@
+	gcc -c $< $(CFLAGS) -Iinclude -Ilibft/include -o $@
 
 $(NAME): $(LIBFT) $(OBJ_FILES)
 	gcc $(OBJ_FILES) $(CFLAGS) $(LIBFT) -Iinclude  -o $(NAME)
 
 $(LIBFT):
-	make -C ./libft/ bonus
+	make -C ./libft/
 
 clean:
 	rm -rf $(BIN)
@@ -32,4 +32,4 @@ fclean: clean
 	rm -f $(NAME)
 	make -C ./libft/ fclean
 
-re: clean $(NAME)
+re: fclean $(NAME)

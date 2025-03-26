@@ -6,6 +6,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <stdlib.h>
+#include "libft.h"
 
 typedef struct s_file_range
 {
