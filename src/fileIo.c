@@ -47,6 +47,8 @@ t_file_range* mapFileRangeToMemory(int fd, size_t offset, size_t size)
 
 void unmapFileRange(t_file_range** mappedRange)
 {
+    if (!*mappedRange)
+        return;
     munmap((*mappedRange)->rangeStart, (*mappedRange)->rangeSize);
     free(*mappedRange);
     *mappedRange = NULL;

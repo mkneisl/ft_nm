@@ -21,8 +21,7 @@ t_elf_map*          mapFile(const char* path)
         || MARCH_CALL(elfMap->arch, verifyHeader, elfMap) < 0
         || MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap) < 0)
     {
-        close(elfMap->fd);
-        free(elfMap);
+        unmapFile(elfMap);
         return NULL;
     }
     return elfMap;
@@ -195,6 +194,8 @@ void                unmapFile(t_elf_map* elfMap)
         mappedSection = mappedSection->next;                                                      
     }
     ft_lstclear(&elfMap->mappedSections, NULL);
+    if (elfMap->fd > 0)
+        close(elfMap->fd);
     unmapFileRange(&elfMap->fileHdrRange);                                          
     unmapFileRange(&elfMap->sctnHdrRange);            
     free(elfMap);                              

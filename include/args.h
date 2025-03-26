@@ -5,7 +5,7 @@
 typedef struct s_options
 {
     char noSort         : 1; // -p
-    char reverseSort    : 1; // -r
+    char sortDir        : 1; // -r
     char undefinedOnly  : 1; // -u
     char externOnly     : 1; // -g
     char printAll       : 1; // -a

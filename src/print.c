@@ -35,6 +35,7 @@ int printInvldFileFmt(const char* file)
     ft_printf(IDENT": '%s': file format not recognized\n", file);
     return -1;
 }
+
 int printFileTooShort(const char* file)
 {
     ft_printf(IDENT": '%s': file too short\n", file);
