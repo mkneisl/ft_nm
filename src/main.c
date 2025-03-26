@@ -22,8 +22,21 @@ int main(int argc, char** argv)
         printf("No symbols\n");
         return 1;
     }
-    for (size_t i = 0; i < symData->symbolCount; i++)
-        printf("->%s\n", getSymbolName(symData, symData->symbols[i]));
+    sortSymbols(symData, 1);
+    for (size_t i = 0; i < symData->symbolCount; i++){
+        uint64_t symVal = 0;
+        char* symName = MARCH_CALL(symData->elfMap->arch, getSymbolName, symData, symData->symbols[i]);
+        int symChar = MARCH_CALL(symData->elfMap->arch, getSymbolInfo, symData, symData->symbols[i], &symVal);
+        // if (!ft_strlen(symName))
+        //     continue;
+        // if (ft_toupper(symChar) == 'A')
+        //     continue;
+        if (ft_toupper(symChar) != 'U'
+            && ft_toupper(symChar) != 'W') 
+            printf("%016lx %c %s\n", symVal, symChar, symName);
+        else
+            printf("%16s %c %s\n", "", symChar, symName);
+    }
     unmapFile(elfMap);
     return 0;
 }
