@@ -6,7 +6,10 @@ typedef struct{
     unsigned char	e_ident[EI_NIDENT];
 }ElfN_Ehdr;
 
-typedef unsigned char* ElfN_Shdr;
+typedef struct{ 
+    uint32_t      sh_name;
+}ElfN_Shdr;
+
 typedef struct{ 
     uint32_t      st_name;
 }ElfN_Sym;

@@ -16,10 +16,11 @@ t_elf_map*          mapFile(const char* path)
         free(elfMap);
         return NULL;
     }
-    if (mapHeader(elfMap) < 0
-        || ((elfMap->arch == ELFCLASS32 && mapSectionHeaders32(elfMap) < 0)
-        || (elfMap->arch == ELFCLASS64 && mapSectionHeaders64(elfMap) < 0)))
+    if (mapHeader(elfMap) < 0 
+        || MARCH_CALL(elfMap->arch, verifyHeader, elfMap) < 0
+        || MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap) < 0)
     {
+        close(elfMap->fd);
         free(elfMap);
         return NULL;
     }
@@ -37,22 +38,51 @@ int mapHeader(t_elf_map* elfMap)
     if (!elfMap->fileHdrRange)
         return -1;
     elfMap->elfHeader = (ElfN_Ehdr*)elfMap->fileHdrRange->rangeStart;
-    if (ft_memcmp(elfMap->elfHeader, ELFMAG, SELFMAG))
+    if (ft_memcmp(elfMap->elfHeader->e_ident, ELFMAG, SELFMAG))
     {
+        printf("wrong class\n");
         return -1;
     }
     elfMap->arch = elfMap->elfHeader->e_ident[EI_CLASS];
     if (elfMap->arch != ELFCLASS32
         && elfMap->arch != ELFCLASS64)
     {
-        return -1;
-    }
-    if (elfMap->elfHeader->e_ident[EI_VERSION] != EV_CURRENT)
-    {
+        printf("wrong class\n");
         return -1;
     }
     return 0;
 }
+
+#define MARCH_verifyHeader(arch)\
+int verifyHeader##arch(t_elf_map* elfMap) \
+{\
+    Elf##arch##_Ehdr* elfHdr;\
+\
+    elfHdr = (Elf##arch##_Ehdr*)elfMap->fileHdrRange->rangeStart;\
+    if (elfHdr->e_ident[EI_VERSION] != EV_CURRENT)\
+    {\
+        printf("e1\n");\
+        return -1;\
+    }\
+    if (elfHdr->e_type != ET_EXEC \
+        && elfHdr->e_type != ET_DYN\
+        && elfHdr->e_type != ET_REL)\
+        {\
+            printf("e2\n");\
+            return -1;\
+        }\
+    if (elfHdr->e_ehsize != sizeof(Elf##arch##_Ehdr)\
+        || elfHdr->e_shentsize != sizeof(Elf##arch##_Shdr)\
+        || elfHdr->e_shoff + elfHdr->e_shentsize * elfHdr->e_shnum > elfMap->fileSize\
+        || elfHdr->e_shstrndx >= elfHdr->e_shnum)\
+        {\
+            printf("e3\n");\
+            return -1;\
+        }\
+    return 0;\
+}
+MARCH_verifyHeader(32)
+MARCH_verifyHeader(64)
 
 #define MARCH_mapSectionHeaders(arch)\
 int mapSectionHeaders##arch(t_elf_map* elfMap)                         \
@@ -150,7 +180,6 @@ t_mapped_section*   getSection##arch(t_elf_map* elfMap, const char* name)       
     }                                                                                            \
     return NULL;                                                                                 \
 }
-
 MARCH_getSection(32)
 MARCH_getSection(64)
 

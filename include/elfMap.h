@@ -27,7 +27,7 @@ typedef struct s_elf_map
     char            arch;
     ElfN_Ehdr*      elfHeader;
     ElfN_Shdr*      sectionHeader;
-    const char*     sectionNameTable;
+    char*           sectionNameTable;
     t_list*         mappedSections;
     t_file_range*   fileHdrRange;
     t_file_range*   sctnHdrRange;
@@ -35,6 +35,9 @@ typedef struct s_elf_map
 
 t_elf_map*          mapFile(const char* path);
 int                 mapHeader(t_elf_map* elfMap);
+
+int                 verifyHeader32(t_elf_map* elfMap);
+int                 verifyHeader64(t_elf_map* elfMap);
 
 int                 mapSectionHeaders64(t_elf_map* elfMap);
 int                 mapSectionHeaders32(t_elf_map* elfMap);

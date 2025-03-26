@@ -17,7 +17,7 @@ int openFile(const char* path, size_t* fileSize)
         printf("fstat failed! (%i)\n", errno);
         return -1;
     }
-    if (!S_ISREG(fileStats.st_mode))
+    if (!S_ISREG(fileStats.st_mode) || fileStats.st_size < 50)
     {
         printf("invalid file provided\n");
         return -1;
