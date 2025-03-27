@@ -1,6 +1,6 @@
 #ifndef SYMBOLS_H
-#define SYMBOLS_H
-#include "elfMap.h"
+# define SYMBOLS_H
+# include "elfMap.h"
 
 typedef struct s_symbol_data
 {
@@ -12,6 +12,7 @@ typedef struct s_symbol_data
 
 t_symbol_data* loadSymbols32(t_elf_map* elfMap);
 t_symbol_data* loadSymbols64(t_elf_map* elfMap);
+void clearSymbols(t_symbol_data* symData);
 
 char* getSymbolName64(t_symbol_data* symData, ElfN_Sym* symbol);
 char* getSymbolName32(t_symbol_data* symData, ElfN_Sym* symbol);

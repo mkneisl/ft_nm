@@ -30,7 +30,7 @@ int parseFlags(t_options* options, const char*** argv)
             options->noSort = 1;
             break;
         case 'r':
-            options->reverseSort = 1;
+            options->sortDir = 1;
             break;
         case 'u':
             options->undefinedOnly = 1;

@@ -1,18 +1,18 @@
 #ifndef FILEMAPPING_H
-#define FILEMAPPING_H
-#include <stdint.h>
-#include <stddef.h>
-#include "fileIo.h"
-#include "print.h"
-#include "libft.h"
-#include "march.h"
+# define FILEMAPPING_H
+# include <stdint.h>
+# include <stddef.h>
+# include "fileIo.h"
+# include "print.h"
+# include "libft.h"
+# include "march.h"
 
-#define PAGE_4KB 0x1000
+# define PAGE_4KB 0x1000
 
-#define ALIGN(val, align) (((uint64_t)(val)) & ~(align - 1))
-#define ALIGN_UP(val, align) (((uint64_t)(val) + (align - 1)) & ~(align - 1))
+# define ALIGN(val, align) (((uint64_t)(val)) & ~(align - 1))
+# define ALIGN_UP(val, align) (((uint64_t)(val) + (align - 1)) & ~(align - 1))
 
-#define APPLY_OFFSET(range, fileOffset) ((char*)range->rangeStart + (fileOffset - range->offset))
+# define APPLY_OFFSET(range, fileOffset) ((char*)range->rangeStart + (fileOffset - range->offset))
 
 typedef struct s_mapped_section
 {

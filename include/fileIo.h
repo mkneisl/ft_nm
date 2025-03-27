@@ -1,12 +1,12 @@
 #ifndef FILEIO_H
-#define FILEIO_H
-#include <fcntl.h>
-#include <stddef.h>
-#include <errno.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include "libft.h"
+# define FILEIO_H
+# include <fcntl.h>
+# include <stddef.h>
+# include <errno.h>
+# include <sys/mman.h>
+# include <sys/stat.h>
+# include <stdlib.h>
+# include "libft.h"
 
 typedef struct s_file_range
 {

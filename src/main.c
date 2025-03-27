@@ -25,7 +25,7 @@ int displaySymbols(t_options* options, const char* elfFile)
             && ft_toupper(symChar) != 'W') 
             ft_printf("%c %s\n", symChar, symName);
         else
-            ft_printf("%c %s\n",  symChar, symName);
+            ft_printf("%c %s\n", symChar, symName);
     }
     unmapFile(elfMap);
     return 0;

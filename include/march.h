@@ -1,6 +1,6 @@
 #ifndef MARCH_H
-#define MARCH_H
-#include <elf.h>
+# define MARCH_H
+# include <elf.h>
 
 typedef struct{ 
     unsigned char	e_ident[EI_NIDENT];

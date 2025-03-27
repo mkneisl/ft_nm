@@ -1,6 +1,6 @@
 #ifndef ARGS_H
-#define ARGS_H
-#include "print.h"
+# define ARGS_H
+# include "print.h"
 
 typedef struct s_options
 {

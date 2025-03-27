@@ -1,5 +1,11 @@
 #include "symbols.h"
 
+void clearSymbols(t_symbol_data* symData)
+{
+    free(symData->symbols);
+    free(symData);
+}
+
 #define MARCH_loadSymbols(arch)\
 t_symbol_data* loadSymbols##arch(t_elf_map* elfMap)\
 {\
