@@ -6,7 +6,7 @@
 /*   By: mkneisl <mkneisl@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 20:14:07 by mkneisl           #+#    #+#             */
-/*   Updated: 2025/03/27 14:52:17 by mkneisl          ###   ########.fr       */
+/*   Updated: 2025/03/27 13:37:10 by mkneisl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	get_next_part(const char *s, unsigned int *start
 	unsigned int	cursor;
 	char			maxCmd;
 
-	maxCmd = 1;
+	maxCmd = 2;
 	cursor = *start + *length;
 	*start = cursor;
 	*length = 0;
@@ -61,7 +61,16 @@ static int	get_next_part(const char *s, unsigned int *start
 	}
 	if (s[++cursor] == '%')
 		return (*length = *length + 2);
-	while (is_cmd(s[cursor]) && maxCmd--)
+	if (cmd_type(s[cursor]) == 5)
+		cursor++;
+	while (cmd_type(s[cursor]) == 4)
+		cursor++;
+	if (s[cursor] == '.')
+		cursor++;
+	while (cmd_type(s[cursor]) == 4)
+		cursor++;
+	while ((cmd_type(s[cursor]) == 1 || cmd_type(s[cursor]) == 2)
+			&& maxCmd--)
 		cursor++;
 	*length = cursor - *start;
 	return (*length);

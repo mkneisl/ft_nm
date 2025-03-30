@@ -6,7 +6,7 @@
 /*   By: mkneisl <mkneisl@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 19:29:49 by mkneisl           #+#    #+#             */
-/*   Updated: 2025/03/27 15:05:48 by mkneisl          ###   ########.fr       */
+/*   Updated: 2025/03/27 12:24:30 by mkneisl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 # include "libft.h"
 # include <unistd.h>
 # include <stdarg.h>
-# include <stdint.h>
 
 typedef struct s_prntf_arg
 {
@@ -27,7 +26,7 @@ typedef struct s_prntf_arg
 	char	large;
 }		t_prntf_arg;
 
-int		is_cmd(char c);
+int		cmd_type(char c);
 void	fix_str(char *str);
 char	*ft_itoa_sb(long long num, int base);
 char	*ft_itoa_ub(unsigned long long num, int base);
