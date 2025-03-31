@@ -1,5 +1,6 @@
 #include "elfMap.h"
 #include <string.h>
+#include "print.h"
 
 t_elf_map*          mapFile(const char* path)
 {
@@ -21,6 +22,7 @@ t_elf_map*          mapFile(const char* path)
         || MARCH_CALL(elfMap->arch, verifyHeader, elfMap) < 0
         || MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap) < 0)
     {
+        printInvldFileFmt(path);
         unmapFile(elfMap);
         return NULL;
     }
@@ -40,14 +42,12 @@ int mapHeader(t_elf_map* elfMap)
     elfMap->elfHeader = (ElfN_Ehdr*)elfMap->fileHdrRange->rangeStart;
     if (ft_memcmp(elfMap->elfHeader->e_ident, ELFMAG, SELFMAG))
     {
-        ft_printf("wrong class\n");
         return -1;
     }
     elfMap->arch = elfMap->elfHeader->e_ident[EI_CLASS];
     if (elfMap->arch != ELFCLASS32
         && elfMap->arch != ELFCLASS64)
     {
-        ft_printf("wrong class\n");
         return -1;
     }
     return 0;
@@ -59,26 +59,24 @@ int verifyHeader##arch(t_elf_map* elfMap) \
     Elf##arch##_Ehdr* elfHdr;\
 \
     elfHdr = (Elf##arch##_Ehdr*)elfMap->fileHdrRange->rangeStart;\
-    if (elfHdr->e_ident[EI_VERSION] != EV_CURRENT)\
+    if (elfHdr->e_ident[EI_VERSION] != EV_CURRENT\
+        || elfHdr->e_ident[EI_DATA] != ELFDATA2LSB) /*little endian (x86_64)*/\
     {\
-        ft_printf("e1\n");\
         return -1;\
     }\
     if (elfHdr->e_type != ET_EXEC \
         && elfHdr->e_type != ET_DYN\
         && elfHdr->e_type != ET_REL)\
-        {\
-            ft_printf("e2\n");\
-            return -1;\
-        }\
+    {\
+        return -1;\
+    }\
     if (elfHdr->e_ehsize != sizeof(Elf##arch##_Ehdr)\
         || elfHdr->e_shentsize != sizeof(Elf##arch##_Shdr)\
         || elfHdr->e_shoff + elfHdr->e_shentsize * elfHdr->e_shnum > elfMap->fileSize\
         || elfHdr->e_shstrndx >= elfHdr->e_shnum)\
-        {\
-            ft_printf("e3\n");\
-            return -1;\
-        }\
+    {\
+        return -1;\
+    }\
     return 0;\
 }
 MARCH_verifyHeader(32)

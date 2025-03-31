@@ -70,7 +70,7 @@ void sortSymbols(t_symbol_data* symData, int dir)
     {
         symbol = symData->symbols[i];
         symName = MARCH_CALL(symData->elfMap->arch, getSymbolName, symData, symbol);
-        symNameLen = ft_strlen(symName);
+        symNameLen = ft_strlen(symName) + 1;
         int j = i;
         while  (--j >= 0)
         {
@@ -79,7 +79,7 @@ void sortSymbols(t_symbol_data* symData, int dir)
                 MARCH_CALL(symData->elfMap->arch, getSymbolName, symData, symData->symbols[j]),
                 symNameLen
             );
-            if ((dir < 0) ? cmpResult <= 0 : cmpResult > 0)
+            if ((dir < 0) ? cmpResult <= 0 : cmpResult >= 0)
                 break;
             symData->symbols[j + 1] = symData->symbols[j];
         }
@@ -88,7 +88,7 @@ void sortSymbols(t_symbol_data* symData, int dir)
 }
 
 #define MARCH_getSymbolInfo(arch)\
-char getSymbolInfo##arch(t_symbol_data* symData, ElfN_Sym* symbol, uint64_t* value)\
+char getSymbolInfo##arch(t_symbol_data* symData, ElfN_Sym* symbol, uint64_t* value, bool* printVal)\
 {\
     Elf##arch##_Sym* symArch;\
     Elf##arch##_Shdr* section;\
@@ -100,6 +100,7 @@ char getSymbolInfo##arch(t_symbol_data* symData, ElfN_Sym* symbol, uint64_t* val
     *value = symArch->st_value;\
     bind = ELF##arch##_ST_BIND(symArch->st_info);\
     type = ELF##arch##_ST_TYPE(symArch->st_info);\
+    *printVal = symArch->st_shndx != SHN_UNDEF;\
     if (symArch->st_shndx == SHN_UNDEF)\
     {\
         if (bind != STB_WEAK)\
@@ -113,6 +114,13 @@ char getSymbolInfo##arch(t_symbol_data* symData, ElfN_Sym* symbol, uint64_t* val
         return 'u';\
     if (type == STT_GNU_IFUNC)\
         return 'i';\
+    if (bind == STB_WEAK)\
+    {\
+        if (type == STT_OBJECT)\
+            return 'V';\
+        else\
+            return 'W';\
+    }\
     if (symArch->st_shndx == SHN_ABS)\
         return (bind == STB_GLOBAL) ? 'A' : 'a';\
     if (symArch->st_shndx == SHN_COMMON)\
@@ -140,3 +148,34 @@ char getSymbolInfo##arch(t_symbol_data* symData, ElfN_Sym* symbol, uint64_t* val
 }
 MARCH_getSymbolInfo(32)
 MARCH_getSymbolInfo(64)
+
+#define MARCH_isPrintSym(arch)\
+bool isPrintSym##arch(t_options* options, ElfN_Sym* symbol)\
+{\
+    Elf##arch##_Sym* symArch;\
+    size_t bind;\
+    size_t type;\
+\
+    symArch = (Elf##arch##_Sym*)symbol;\
+    bind = ELF##arch##_ST_BIND(symArch->st_info);\
+    type = ELF##arch##_ST_TYPE(symArch->st_info);\
+    if (options->undefinedOnly \
+        && symArch->st_shndx != SHN_UNDEF)\
+        return false;\
+    else if (options->externOnly \
+        && (symArch->st_shndx != SHN_COMMON\
+        && symArch->st_shndx != SHN_UNDEF\
+        && bind != STB_GLOBAL\
+        && bind != STB_WEAK))\
+        return false;\
+    if (options->pvar)\
+        return true;\
+    if (type == STT_SECTION\
+        || type == STT_FILE)\
+        return false;\
+    return true;\
+}
+MARCH_isPrintSym(32)
+MARCH_isPrintSym(64)
+
+

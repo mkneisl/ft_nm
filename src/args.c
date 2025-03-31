@@ -1,4 +1,5 @@
 #include "args.h"
+#include "print.h"
 
 int parseArgs(t_options* options, const char** argv)
 {

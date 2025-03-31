@@ -1,15 +1,25 @@
 #ifndef ARGS_H
 # define ARGS_H
-# include "print.h"
+# include <stdint.h> 
 
 typedef struct s_options
 {
-    char noSort         : 1; // -p
-    char sortDir        : 1; // -r
-    char undefinedOnly  : 1; // -u
-    char externOnly     : 1; // -g
-    char printAll       : 1; // -a
-    char help           : 1; // -?
+    union {
+        struct{
+            uint8_t help           : 1; // -?
+            uint8_t noSort         : 1; // -p
+            uint8_t sortDir        : 1; // -r
+            uint8_t undefinedOnly  : 1; // -u
+            uint8_t externOnly     : 1; // -g
+            uint8_t printAll       : 1; // -a
+            uint8_t pad1           : 2;
+        };
+        struct{
+            uint8_t pad2           : 3;
+            uint8_t pvar           : 3;
+            uint8_t pad3           : 2;
+        };
+    };
 }t_options;
 
 int parseArgs(t_options* options, const char** argv);
