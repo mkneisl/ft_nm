@@ -12,8 +12,10 @@ typedef struct s_symbol_data
     char* nameTable;
 }t_symbol_data;
 
-t_symbol_data* loadSymbols32(t_elf_map* elfMap);
-t_symbol_data* loadSymbols64(t_elf_map* elfMap);
+t_symbol_data* initSymbols(t_elf_map* elfMap);
+
+bool loadSymbols32(t_symbol_data* symData, t_mapped_section* symTab);
+bool loadSymbols64(t_symbol_data* symData, t_mapped_section* symTab);
 void clearSymbols(t_symbol_data* symData);
 
 char* getSymbolName64(t_symbol_data* symData, ElfN_Sym* symbol);

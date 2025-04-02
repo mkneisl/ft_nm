@@ -1,7 +1,6 @@
 #include "main.h"
 #include "print.h"
 
-
 int nmFile(t_options* options, const char* elfFile)
 {
     t_elf_map* elfMap;
@@ -10,7 +9,7 @@ int nmFile(t_options* options, const char* elfFile)
     elfMap = mapFile(elfFile);
     if (!elfMap)
         return -1;
-    symData = MARCH_CALL(elfMap->arch, loadSymbols, elfMap);
+    symData = initSymbols(elfMap);
     if (!symData)
     {
         unmapFile(elfMap);
