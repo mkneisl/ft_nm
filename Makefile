@@ -22,16 +22,18 @@ CFLAGS=-Werror -Wall -Wextra -std=c11
 
 all: $(NAME)
 
-$(BIN)/march/%: ./src/%.c
+$(BIN)/march/%:
 	$(DIR_GUARD)
-	gcc -c $< $(CFLAGS) -Iinclude -Ilibft/include -DTARGET_ARCH=32 -o $(addsuffix x32.o , $@)
-	gcc -c $< $(CFLAGS) -Iinclude -Ilibft/include -DTARGET_ARCH=64 -o $(addsuffix x64.o , $@)
+	$(eval FILENAME=$(notdir $(basename $@)))
+	$(eval ARCH=$(findstring 32,$(FILENAME))$(findstring 64,$(FILENAME)))
+	$(eval FILENAME=$(subst x$(ARCH),,$(FILENAME)))
+	gcc -c $(addprefix ./src/, $(addsuffix .c, $(FILENAME))) $(CFLAGS) -Iinclude -Ilibft/include -DTARGET_ARCH=$(ARCH) -o $@
 
 $(BIN)/%.o: ./src/%.c
 	$(DIR_GUARD)
-	gcc -c $< $(CFLAGS) -Iinclude -Ilibft/include -DTARGET_ARCH=32 -o $@
+	gcc -c $< $(CFLAGS) -Iinclude -Ilibft/include -o $@
 
-$(NAME): $(LIBFT) $(OBJ_FILES) $(MARCH_BIN)
+$(NAME): $(LIBFT) $(OBJ_FILES) $(MARCH_OBJ_x64) $(MARCH_OBJ_x32)
 	gcc $(OBJ_FILES) $(MARCH_OBJ_x64) $(MARCH_OBJ_x32) $(CFLAGS) $(LIBFT) -Iinclude  -o $(NAME)
 
 $(LIBFT):

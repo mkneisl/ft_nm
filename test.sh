@@ -16,7 +16,7 @@ testNm(){
     ./ft_nm $param $1 > ft_out
     nm $param $1 > gnu_out
     diff ft_out gnu_out > diff_out
-    if [ -s "$param" ]; then
+    if [ -s "diff_out" ]; then
         echo "[-] Output not equal:"
         cat diff_out
     else
