@@ -17,8 +17,13 @@ t_elf_map*          mapFile(const char* path)
         free(elfMap);
         return NULL;
     }
+    if (elfMap->fileSize <= 1)
+    {
+        free(elfMap);
+        return NULL;
+    }
     elfMap->largeFile = elfMap->fileSize > SMALL_FILE_SIZE;
-    if (elfMap->fileSize < 20
+    if (elfMap->fileSize < sizeof(Elf32_Ehdr)
         || mapHeader(elfMap) < 0
         || !MARCH_CALL(elfMap->arch, verifyHeader, elfMap)
         || !MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap))

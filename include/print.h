@@ -3,7 +3,7 @@
 # include "libft.h"
 # include "symbols.h"
 
-# define IDENT "nm"
+# define IDENT "ft_nm"
 
 
 int printInvldOption(char option);
