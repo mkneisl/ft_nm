@@ -18,6 +18,7 @@ int nmFile(t_options* options, const char* elfFile)
     if (!options->noSort)
         sortSymbols(symData, (int)options->sortDir * -1);
     printSyms(options, symData);
+    clearSymbols(symData);
     unmapFile(elfMap);
     return 0;
 }

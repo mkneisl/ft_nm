@@ -28,9 +28,9 @@ t_file_range* mapFileRangeToMemory(int fd, size_t offset, size_t size)
     if (!mappedRange)
         return NULL;
     mappedRange->rangeStart = mmap(
-        NULL, 
-        size, 
-        PROT_READ, 
+        NULL,
+        size,
+        PROT_READ,
         MAP_PRIVATE,
         fd,
         offset
@@ -45,7 +45,7 @@ t_file_range* mapFileRangeToMemory(int fd, size_t offset, size_t size)
     return mappedRange;
 }
 
-void unmapFileRange(t_file_range** mappedRange)
+void  unmapFileRange(t_file_range** mappedRange)
 {
     if (!*mappedRange)
         return;

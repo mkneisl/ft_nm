@@ -10,7 +10,7 @@ bool MARCH_FUNC(loadSymbols)(t_symbol_data* symData, t_mapped_section* symTab)
     if (!symData->symbols)
         return false;
     for (size_t i = 0; i < symData->symbolCount; i++)
-        symData->symbols[i] = (((ElfN_Sym*)symTab->data) + i + 1);
+        symData->symbols[i] = (ElfN_Sym*)(((ElfV_Sym*)symTab->data) + i + 1);
     return true;
 }
 
@@ -21,7 +21,7 @@ char* MARCH_FUNC(getSymbolName)(t_symbol_data* symData, ElfN_Sym* symbol)
     archSym = (ElfV_Sym*)symbol;
     if (ELF_ARCH_ST_TYPE(archSym->st_info) == STT_SECTION)
         return symData->elfMap->sectionNameTable + ((ElfV_Shdr*)symData->elfMap->sectionHeader)[archSym->st_shndx].sh_name;
-    return symData->nameTable + symbol->st_name;
+    return symData->nameTable + archSym->st_name;
 }
 
 char MARCH_FUNC(getSymbolInfo)(t_symbol_data* symData, ElfN_Sym* symbol, uint64_t* value, bool* printVal)
@@ -30,7 +30,7 @@ char MARCH_FUNC(getSymbolInfo)(t_symbol_data* symData, ElfN_Sym* symbol, uint64_
     ElfV_Shdr* section;
     size_t bind;
     size_t type;
-    
+
     section = 0;
     symArch = (ElfV_Sym*)symbol;
     *value = symArch->st_value;
@@ -64,7 +64,7 @@ char MARCH_FUNC(getSymbolInfo)(t_symbol_data* symData, ElfN_Sym* symbol, uint64_
     section = (ElfV_Shdr*)symData->elfMap->sectionHeader + symArch->st_shndx;
     if (section->sh_type == SHT_NOBITS)
         return (bind == STB_GLOBAL) ? 'B' : 'b';
-    if (!ft_strncmp(".sdata", symData->elfMap->sectionNameTable + section->sh_name, 7) 
+    if (!ft_strncmp(".sdata", symData->elfMap->sectionNameTable + section->sh_name, 7)
         || !ft_strncmp(".sbss", symData->elfMap->sectionNameTable + section->sh_name , 6))
         return (bind == STB_GLOBAL) ? 'G' : 'g';
     if (!ft_strncmp(".debug", symData->elfMap->sectionNameTable + section->sh_name, 6))
@@ -92,10 +92,10 @@ bool MARCH_FUNC(isPrintSym)(t_options* options, ElfN_Sym* symbol)
     symArch = (ElfV_Sym*)symbol;
     bind = ELF_ARCH_ST_BIND(symArch->st_info);
     type = ELF_ARCH_ST_TYPE(symArch->st_info);
-    if (options->undefinedOnly 
+    if (options->undefinedOnly
         && symArch->st_shndx != SHN_UNDEF)
         return false;
-    else if (options->externOnly 
+    else if (options->externOnly
         && (symArch->st_shndx != SHN_COMMON
         && symArch->st_shndx != SHN_UNDEF
         && bind != STB_GLOBAL

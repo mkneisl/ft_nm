@@ -17,10 +17,11 @@ t_elf_map*          mapFile(const char* path)
         free(elfMap);
         return NULL;
     }
-    if (elfMap->fileSize < 20 
-        || mapHeader(elfMap) < 0 
-        || MARCH_CALL(elfMap->arch, verifyHeader, elfMap) < 0
-        || MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap) < 0)
+    elfMap->largeFile = elfMap->fileSize > SMALL_FILE_SIZE;
+    if (elfMap->fileSize < 20
+        || mapHeader(elfMap) < 0
+        || !MARCH_CALL(elfMap->arch, verifyHeader, elfMap)
+        || !MARCH_CALL(elfMap->arch, mapSectionHeaders, elfMap))
     {
         printInvldFileFmt(path);
         unmapFile(elfMap);
@@ -31,11 +32,11 @@ t_elf_map*          mapFile(const char* path)
 
 int mapHeader(t_elf_map* elfMap)
 {
-    elfMap->fileHdrRange = 
+    elfMap->fileHdrRange =
         mapFileRangeToMemory(
             elfMap->fd,
             0,
-            PAGE_4KB
+            elfMap->largeFile ? PAGE_4KB : ALIGN_UP(elfMap->fileSize, PAGE_4KB)
         );
     if (!elfMap->fileHdrRange)
         return -1;
@@ -55,18 +56,18 @@ int mapHeader(t_elf_map* elfMap)
 
 void                unmapFile(t_elf_map* elfMap)
 {
-    t_list* mappedSection;  
-    
+    t_list* mappedSection;
+
     mappedSection = elfMap->mappedSections;
-    while (mappedSection)                                                                         
-    {                  
+    while (mappedSection)
+    {
         unmapFileRange(&((t_mapped_section*)mappedSection->content)->range);
-        mappedSection = mappedSection->next;                                                      
+        mappedSection = mappedSection->next;
     }
     ft_lstclear(&elfMap->mappedSections, NULL);
     if (elfMap->fd > 0)
         close(elfMap->fd);
-    unmapFileRange(&elfMap->fileHdrRange);                                          
-    unmapFileRange(&elfMap->sctnHdrRange);            
-    free(elfMap);                              
+    unmapFileRange(&elfMap->fileHdrRange);
+    unmapFileRange(&elfMap->sctnHdrRange);
+    free(elfMap);
 }

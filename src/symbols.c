@@ -15,7 +15,7 @@ t_symbol_data* initSymbols(t_elf_map* elfMap)
         free(symData);
         return NULL;
     }
-    strTab = MARCH_FUNC(getSection)(elfMap, ".strtab");
+    strTab = MARCH_CALL(elfMap->arch, getSection, elfMap, ".strtab");
     if (!strTab)
     {
         free(symData);
@@ -64,5 +64,3 @@ void sortSymbols(t_symbol_data* symData, int dir)
         symData->symbols[j + 1] = symbol;
     }
 }
-
-

@@ -2,6 +2,7 @@
 # define FILEMAPPING_H
 # include <stdint.h>
 # include <stddef.h>
+# include <stdbool.h>
 # include "fileIo.h"
 # include "libft.h"
 # include "march.h"
@@ -12,6 +13,8 @@
 # define ALIGN_UP(val, align) (((uint64_t)(val) + (align - 1)) & ~(align - 1))
 
 # define APPLY_OFFSET(range, fileOffset) ((char*)range->rangeStart + (fileOffset - range->offset))
+
+# define SMALL_FILE_SIZE 3000000  // 3Mb
 
 typedef struct s_mapped_section
 {
@@ -25,6 +28,7 @@ typedef struct s_elf_map
     int             fd;
     size_t          fileSize;
     char            arch;
+    bool            largeFile;
     ElfN_Ehdr*      elfHeader;
     ElfN_Shdr*      sectionHeader;
     char*           sectionNameTable;
@@ -36,11 +40,11 @@ typedef struct s_elf_map
 t_elf_map*          mapFile(const char* path);
 int                 mapHeader(t_elf_map* elfMap);
 
-int                 verifyHeader32(t_elf_map* elfMap);
-int                 verifyHeader64(t_elf_map* elfMap);
+bool                verifyHeader32(t_elf_map* elfMap);
+bool                verifyHeader64(t_elf_map* elfMap);
 
-int                 mapSectionHeaders64(t_elf_map* elfMap);
-int                 mapSectionHeaders32(t_elf_map* elfMap);
+bool                mapSectionHeaders64(t_elf_map* elfMap);
+bool                mapSectionHeaders32(t_elf_map* elfMap);
 
 t_mapped_section*   mapSection64(t_elf_map* elfMap, Elf64_Shdr* section);
 t_mapped_section*   mapSection32(t_elf_map* elfMap, Elf32_Shdr* section);
