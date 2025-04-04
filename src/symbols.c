@@ -2,11 +2,11 @@
 
 t_symbol_data* initSymbols(t_elf_map* elfMap)
 {
-    t_symbol_data* symData;
     t_mapped_section* symTab;
     t_mapped_section* strTab;
+    t_symbol_data* symData;
 
-    symData = (t_symbol_data*)malloc(sizeof(symData));
+    symData = (t_symbol_data*)malloc(sizeof(t_symbol_data));
     if (!symData)
         return NULL;
     symTab = MARCH_CALL(elfMap->arch, getSection, elfMap, ".symtab");

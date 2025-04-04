@@ -29,6 +29,7 @@ int main(int argc, const char** argv)
     char openDefault;
     t_options nmOption;
 
+    ft_bzero(&nmOption, sizeof(t_options));
     if (parseArgs(&nmOption, argv) < 0)
     {
         printHelp();

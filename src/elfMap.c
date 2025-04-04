@@ -67,6 +67,7 @@ void                unmapFile(t_elf_map* elfMap)
     while (mappedSection)
     {
         unmapFileRange(&((t_mapped_section*)mappedSection->content)->range);
+        free(mappedSection->content);
         mappedSection = mappedSection->next;
     }
     ft_lstclear(&elfMap->mappedSections, NULL);

@@ -110,6 +110,8 @@ char	*process_str(char *str, va_list *vlst, unsigned int *length)
 	if (cmd.conv_char == 'p')
 		ret = append(ft_strdup("0x"), ret);
 	*length += ft_strlen(ret);
+	if (cmd.flags)
+		free(cmd.flags);
 	free(str);
 	return (ret);
 }
